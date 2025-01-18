@@ -40,12 +40,12 @@ class WeatherService:
                     data = await response.json()
                     
                     return {
-                        "temperature": round(data["main"]["temp"], 1),
+                        "temperature": float(data["main"]["temp"]),
                         "condition": data["weather"][0]["main"],
                         "description": data["weather"][0]["description"],
                         "humidity": data["main"]["humidity"],
                         "wind_speed": data["wind"]["speed"],
-                        "feels_like": round(data["main"]["feels_like"], 1)
+                        "feels_like": float(data["main"]["feels_like"])
                     }
                     
         except Exception as e:

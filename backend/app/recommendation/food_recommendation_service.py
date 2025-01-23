@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from datetime import datetime
+from ..agents.food_recommendation_agent import food_recommendation_agent
 
 load_dotenv()
 
@@ -65,49 +66,8 @@ class FoodRecommendationService:
         lon: float,
         mood: str
     ) -> Dict[str, Any]:
-        """
-        Get food recommendations based on current context
-        
-        Args:
-            lat (float): Latitude for weather data
-            lon (float): Longitude for weather data
-            mood (str): User's current mood (happy/bored)
-            
-        Returns:
-            Dict containing recommendations and context
-        """
-        # Get current weather
-        weather_data = await weather_service.get_current_weather(lat, lon)
-        
-        # Get current time and meal type
-        current_time = datetime.now().strftime("%H:%M")
-        meal_type = self._get_meal_type(current_time)
-        
-        # Format prompt variables
-        prompt_vars = {
-            "temperature": weather_data["temperature"],
-            "weather_condition": weather_data["condition"],
-            "time": f"{current_time} ({meal_type})",
-            "mood": mood
-        }
-        
-        # Get recommendations from LLM
-        messages = self.prompt.format_messages(**prompt_vars)
-        response = self.llm.invoke(messages)
-        
-        return {
-            "recommendations": response.content,
-            "context": {
-                "weather": {
-                    "temperature": weather_data["temperature"],
-                    "condition": weather_data["condition"],
-                    "feels_like": weather_data["feels_like"]
-                },
-                "time": current_time,
-                "meal_type": meal_type,
-                "mood": mood
-            }
-        }
+        """Get food recommendations using the AI agent"""
+        return await food_recommendation_agent.get_recommendations(lat, lon, mood)
 
 # Create a singleton instance
 food_recommendation_service = FoodRecommendationService() 

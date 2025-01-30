@@ -75,4 +75,5 @@ The backend service for the Food Recommendation App, built with Python, FastAPI,
 ### Common Issues
 1. Import errors: Ensure PYTHONPATH includes the backend directory
 2. API key errors: Verify .env file configuration
-3. Test failures: Check OpenWeatherMap API quota and connectivity 
+3. Test failures: Check OpenWeatherMap API quota and connectivity   
+

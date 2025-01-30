@@ -56,3 +56,4 @@ ENV/
 # Local development
 **/*.db
 **/*.sqlite3 
+**/*.pyc

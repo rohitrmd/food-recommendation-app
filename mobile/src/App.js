@@ -1,3 +1,0 @@
-OPENAI_API_KEY=your_openai_api_key
-TRAVILISEARCH_API_KEY=your_travilisearch_key
-OPENWEATHERMAP_API_KEY=your_openweathermap_key 

@@ -23,8 +23,8 @@ export function RecommendationsScreen({ route }: any) {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#007AFF" />
-        <Text style={styles.loadingText}>Finding the perfect food for your mood...</Text>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text style={styles.loadingText}>Finding perfect recommendations for you...</Text>
       </View>
     );
   }
@@ -43,25 +43,34 @@ export function RecommendationsScreen({ route }: any) {
     );
   }
 
+  const renderContent = () => {
+    if (!items || items.length === 0) {
+      return (
+        <View style={styles.centerContainer}>
+          <Text style={styles.noResults}>No recommendations found</Text>
+        </View>
+      );
+    }
+
+    return (
+      <View style={styles.recommendationsList}>
+        {items.map((item, index) => (
+          <View key={item.id || index} style={styles.recommendationCard}>
+            <Text style={styles.recommendationName}>{item.name}</Text>
+            <Text style={styles.recommendationDescription}>{item.description}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Your Food Recommendations</Text>
         <Text style={styles.subtitle}>Based on your {mood.toLowerCase()} mood</Text>
       </View>
-
-      {items.length === 0 ? (
-        <Text style={styles.noResults}>No recommendations found</Text>
-      ) : (
-        <View style={styles.recommendationsList}>
-          {items.map((item, index) => (
-            <View key={item.id || index} style={styles.recommendationCard}>
-              <Text style={styles.recommendationName}>{item.name}</Text>
-              <Text style={styles.recommendationDescription}>{item.description}</Text>
-            </View>
-          ))}
-        </View>
-      )}
+      {renderContent()}
     </ScrollView>
   );
 }
@@ -73,8 +82,8 @@ const styles = StyleSheet.create({
   },
   centerContainer: {
     flex: 1,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
     padding: 20,
   },
   header: {
@@ -94,6 +103,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 16,
     color: '#666',
+    textAlign: 'center',
   },
   errorText: {
     color: 'red',
@@ -112,36 +122,30 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   recommendationsList: {
-    padding: 15,
+    padding: 16,
   },
   recommendationCard: {
-    backgroundColor: '#f8f8f8',
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 15,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    padding: 16,
+    marginBottom: 16,
+    elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
+    shadowRadius: 4,
   },
   recommendationName: {
     fontSize: 18,
-    fontWeight: '600',
+    fontWeight: 'bold',
     marginBottom: 8,
   },
   recommendationDescription: {
     fontSize: 14,
     color: '#666',
-    lineHeight: 20,
   },
   noResults: {
-    textAlign: 'center',
     fontSize: 16,
     color: '#666',
-    marginTop: 30,
   },
 }); 

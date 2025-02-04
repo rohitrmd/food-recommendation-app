@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { api, endpoints } from '../services/api';
 
 interface Recommendation {
   id: string;
@@ -8,13 +9,13 @@ interface Recommendation {
 }
 
 interface RecommendationsState {
-  items: Recommendation[];
+  items: Recommendation[] | null;
   loading: boolean;
   error: string | null;
 }
 
 const initialState: RecommendationsState = {
-  items: [],
+  items: null,
   loading: false,
   error: null,
 };
@@ -23,12 +24,27 @@ export const fetchRecommendations = createAsyncThunk(
   'recommendations/fetch',
   async ({ latitude, longitude, mood }: { latitude: number; longitude: number; mood: string }) => {
     try {
-      // TODO: Replace with actual API call
-      const response = await fetch(`http://localhost:8000/recommendations/food?lat=${latitude}&lon=${longitude}&mood=${mood}`);
-      const data = await response.json();
+      const response = await api.post(endpoints.recommendations, {
+        latitude,
+        longitude,
+        mood: mood.toLowerCase(),
+      });
+      
+      // Ensure we're returning an array
+      const data = response.data?.recommendations || [];
       return data;
-    } catch (error) {
-      throw error;
+    } catch (error: any) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        throw new Error(error.response.data.message || 'Server error');
+      } else if (error.request) {
+        // The request was made but no response was received
+        throw new Error('No response from server. Please check your connection.');
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        throw new Error('Failed to fetch recommendations');
+      }
     }
   }
 );
@@ -38,7 +54,7 @@ const recommendationsSlice = createSlice({
   initialState,
   reducers: {
     clearRecommendations: (state) => {
-      state.items = [];
+      state.items = null;
       state.error = null;
     },
   },
@@ -47,14 +63,16 @@ const recommendationsSlice = createSlice({
       .addCase(fetchRecommendations.pending, (state) => {
         state.loading = true;
         state.error = null;
+        state.items = null;
       })
       .addCase(fetchRecommendations.fulfilled, (state, action) => {
         state.loading = false;
-        state.items = action.payload;
+        state.items = Array.isArray(action.payload) ? action.payload : [];
       })
       .addCase(fetchRecommendations.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || 'Failed to fetch recommendations';
+        state.items = null;
       });
   },
 });

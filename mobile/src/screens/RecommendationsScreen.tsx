@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchRecommendations } from '../store/recommendationsSlice';
+import LottieView from 'lottie-react-native';
 
 export function RecommendationsScreen({ route }: any) {
   const dispatch = useAppDispatch();
@@ -23,8 +24,13 @@ export function RecommendationsScreen({ route }: any) {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text style={styles.loadingText}>Finding perfect recommendations for you...</Text>
+        <LottieView
+          source={require('../assets/animations/hungry.json')}
+          autoPlay
+          loop
+          style={styles.lottieAnimation}
+        />
+        <Text style={styles.loadingText}>Finding delicious food for you...</Text>
       </View>
     );
   }
@@ -100,7 +106,7 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   loadingText: {
-    marginTop: 10,
+    marginTop: 20,
     fontSize: 16,
     color: '#666',
     textAlign: 'center',
@@ -147,5 +153,9 @@ const styles = StyleSheet.create({
   noResults: {
     fontSize: 16,
     color: '#666',
+  },
+  lottieAnimation: {
+    width: 200,
+    height: 200,
   },
 }); 

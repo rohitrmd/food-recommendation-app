@@ -5,11 +5,16 @@ import {
   View, 
   ActivityIndicator, 
   ScrollView, 
-  TouchableOpacity 
+  TouchableOpacity,
+  Image,
+  Dimensions
 } from 'react-native';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { fetchRecommendations } from '../store/recommendationsSlice';
 import LottieView from 'lottie-react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
+const { width } = Dimensions.get('window');
 
 export function RecommendationsScreen({ route }: any) {
   const dispatch = useAppDispatch();
@@ -61,10 +66,44 @@ export function RecommendationsScreen({ route }: any) {
     return (
       <View style={styles.recommendationsList}>
         {items.map((item, index) => (
-          <View key={item.id || index} style={styles.recommendationCard}>
+          <TouchableOpacity 
+            key={item.id || index} 
+            style={styles.recommendationCard}
+            onPress={() => {/* Handle navigation to detail view */}}
+          >
+            <View style={styles.cardHeader}>
+              <View style={styles.cardNumberBadge}>
+                <Text style={styles.cardNumberText}>{index + 1}</Text>
+              </View>
+              <Icon name="star" size={24} color="#FFD700" style={styles.starIcon} />
+            </View>
+            
             <Text style={styles.recommendationName}>{item.name}</Text>
+            
+            <View style={styles.cardTags}>
+              <View style={styles.tag}>
+                <Icon name="clock-outline" size={16} color="#666" />
+                <Text style={styles.tagText}>Open Now</Text>
+              </View>
+              <View style={styles.tag}>
+                <Icon name="map-marker" size={16} color="#666" />
+                <Text style={styles.tagText}>2.5 km</Text>
+              </View>
+            </View>
+            
             <Text style={styles.recommendationDescription}>{item.description}</Text>
-          </View>
+            
+            <View style={styles.cardFooter}>
+              <TouchableOpacity style={styles.actionButton}>
+                <Icon name="directions" size={20} color="#007AFF" />
+                <Text style={styles.actionButtonText}>Directions</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.actionButton}>
+                <Icon name="phone" size={20} color="#007AFF" />
+                <Text style={styles.actionButtonText}>Call</Text>
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
         ))}
       </View>
     );
@@ -75,6 +114,10 @@ export function RecommendationsScreen({ route }: any) {
       <View style={styles.header}>
         <Text style={styles.title}>Your Food Recommendations</Text>
         <Text style={styles.subtitle}>Based on your {mood.toLowerCase()} mood</Text>
+        <View style={styles.moodBadge}>
+          <Icon name="emoticon-happy" size={20} color="#007AFF" />
+          <Text style={styles.moodText}>{mood}</Text>
+        </View>
       </View>
       {renderContent()}
     </ScrollView>
@@ -95,6 +138,8 @@ const styles = StyleSheet.create({
   header: {
     padding: 20,
     backgroundColor: '#f8f8f8',
+    borderBottomWidth: 1,
+    borderBottomColor: '#e0e0e0',
   },
   title: {
     fontSize: 24,
@@ -132,23 +177,100 @@ const styles = StyleSheet.create({
   },
   recommendationCard: {
     backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 16,
+    borderRadius: 15,
+    padding: 20,
     marginBottom: 16,
-    elevation: 2,
+    elevation: 3,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 8,
+  },
+  cardHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  cardNumberBadge: {
+    backgroundColor: '#007AFF',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  cardNumberText: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 16,
+  },
+  starIcon: {
+    marginLeft: 'auto',
   },
   recommendationName: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
+    color: '#1a1a1a',
+  },
+  cardTags: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  tag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    marginRight: 8,
+  },
+  tagText: {
+    marginLeft: 4,
+    color: '#666',
+    fontSize: 14,
   },
   recommendationDescription: {
+    fontSize: 15,
+    color: '#4a4a4a',
+    lineHeight: 22,
+    marginBottom: 16,
+  },
+  cardFooter: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+    paddingTop: 16,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 8,
+  },
+  actionButtonText: {
+    marginLeft: 8,
+    color: '#007AFF',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  moodBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#e8f2ff',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    alignSelf: 'flex-start',
+    marginTop: 8,
+  },
+  moodText: {
+    marginLeft: 6,
+    color: '#007AFF',
     fontSize: 14,
-    color: '#666',
+    fontWeight: '500',
   },
   noResults: {
     fontSize: 16,

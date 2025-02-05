@@ -1,13 +1,17 @@
-# Food Recommendation App - Mobile
+# Food Recommendation App - Mobile Frontend
 
 Mobile application for the Food Recommendation system built with React Native and Expo.
 
 ## Prerequisites
 
-Before running the app, make sure you have the following installed:
-- [Node.js](https://nodejs.org/)
-- [npm](https://www.npmjs.com/)
-- [Expo CLI](https://docs.expo.dev/get-started/installation/)
+- Node.js (v16 or newer)
+- Xcode (for iOS development)
+- CocoaPods (`sudo gem install cocoapods`)
+- Watchman (`brew install watchman`)
+
+## Setup Instructions
+
+1. **Install Dependencies**
 
 ## Getting Started
 
